@@ -9,7 +9,6 @@ import {
   Trash2, 
   ArrowLeft, 
   CheckCircle, 
-  MessageSquare, 
   Gift, 
   Truck, 
   ShoppingBag,
@@ -29,6 +28,7 @@ export default function CartPage() {
     updateQuantity, 
     removeFromCart, 
     clearCart, 
+    addOrder,
     getCartTotal 
   } = useCart();
 
@@ -124,75 +124,44 @@ export default function CartPage() {
     return Object.keys(errors).length === 0;
   };
 
-  // WhatsApp Order Submission
-  const handleWhatsAppCheckout = () => {
+  // Submit order to admin queue
+  const handlePlaceOrder = () => {
     if (!validateForm()) {
-      const firstError = Object.keys(formErrors)[0];
       toast.error("Please fill in the required delivery fields.");
       return;
     }
 
-    const orderNumber = "DF-WA-" + Math.floor(100000 + Math.random() * 900000);
-    
-    // Build WhatsApp Message
-    let text = `🌾 *NEW ORDER: DRONAGIRI FARM* 🌾\n\n`;
-    text += `*Order ID:* ${orderNumber}\n`;
-    text += `*Customer:* ${formData.name}\n`;
-    text += `*Phone:* ${formData.phone}\n`;
-    if (formData.email) text += `*Email:* ${formData.email}\n`;
-    text += `*Delivery Address:* ${formData.address}, ${formData.landmark ? formData.landmark + ", " : ""}${formData.pincode}\n`;
-    if (formData.instructions) text += `*Instructions:* ${formData.instructions}\n`;
-    text += `*Payment Method:* ${formData.paymentMethod === "cod" ? "Cash on Delivery (COD)" : "Direct Bank Transfer"}\n\n`;
-    
-    text += `📦 *ORDER ITEMS:*\n`;
-    cart.forEach((item, index) => {
-      text += `${index + 1}. *${item.product.name}* (${item.size}) x ${item.quantity} - ₹${item.price * item.quantity}\n`;
-    });
-    
-    text += `\n💵 *BILLING DETAILS:*\n`;
-    text += `Subtotal: ₹${subtotal}\n`;
-    if (activeDiscount > 0) {
-      text += `Discount (${promoApplied}): -₹${discountAmount} (${activeDiscount}% OFF)\n`;
-    }
-    text += `Shipping Charges: ${shippingCost === 0 ? "FREE" : "₹" + shippingCost}\n`;
-    text += `*Grand Total: ₹${finalTotal}*\n\n`;
-    text += `Thank you for choosing Dronagiri Farm! Please confirm receipt of my order.`;
-
-    const encodedText = encodeURIComponent(text);
-    const waNumber = "9120537551"; // Standard WhatsApp number for Dronagiri Farm (actual contact in contact list)
-    const waUrl = `https://api.whatsapp.com/send?phone=${waNumber}&text=${encodedText}`;
-
-    // Clear cart and show complete screen locally
-    setCompletedOrderDetails({
-      orderId: orderNumber,
-      name: formData.name,
-      phone: formData.phone,
-      address: `${formData.address}, ${formData.landmark ? formData.landmark + ", " : ""}${formData.pincode}`,
-      total: finalTotal,
-      isWhatsApp: true
-    });
-    
-    setOrderComplete(true);
-    clearCart();
-  };
-
-  // Direct Simulated COD Checkout
-  const handleDirectCheckout = () => {
-    if (!validateForm()) return;
-    
     setIsSubmitting(true);
-    
-    // Simulate API request delay
+    const orderNumber = "DF-" + Math.floor(100000 + Math.random() * 900000);
+    const deliveryAddress = `${formData.address}, ${formData.landmark ? formData.landmark + ", " : ""}${formData.pincode}`;
+
     setTimeout(() => {
-      const orderNumber = "DF-" + Math.floor(100000 + Math.random() * 900000);
-      
       setCompletedOrderDetails({
         orderId: orderNumber,
         name: formData.name,
         phone: formData.phone,
-        address: `${formData.address}, ${formData.landmark ? formData.landmark + ", " : ""}${formData.pincode}`,
+        address: deliveryAddress,
         total: finalTotal,
-        isWhatsApp: false
+        // status: "Order Sent to Admin"
+      });
+
+      addOrder({
+        orderId: orderNumber,
+        customer: {
+          name: formData.name,
+          phone: formData.phone,
+          email: formData.email,
+          address: deliveryAddress,
+        },
+        items: cart,
+        subtotal,
+        discountAmount,
+        promoCode: promoApplied,
+        shippingCost,
+        total: finalTotal,
+        paymentMethod: formData.paymentMethod,
+        // status: "Order Sent to Admin",
+        source: "admin",
       });
       
       setIsSubmitting(false);
@@ -231,10 +200,8 @@ export default function CartPage() {
               Order Placed Successfully!
             </h1>
             <p className="text-gray-500 text-lg mb-8 max-w-md mx-auto">
-              {completedOrderDetails.isWhatsApp 
-                ? "Your order has been compiled and is ready to dispatch. We have opened WhatsApp to connect you directly with Dronagiri Farm!" 
-                : "Thank you for shopping! We have received your order and will start packing your farm-fresh goodies right away."
-              }
+              Your order has been sent to the admin. You can check the latest
+              status anytime from My Orders.
             </p>
 
             <div className="bg-gray-50 rounded-2xl p-6 text-left mb-8 border border-gray-100 divide-y divide-gray-200/60">
@@ -258,34 +225,20 @@ export default function CartPage() {
                 <span className="text-gray-400 text-sm font-medium">Total Price:</span>
                 <span className="text-green-700 font-bold text-lg">₹{completedOrderDetails.total}</span>
               </div>
-              <div className="py-3 flex justify-between gap-4">
+              {/* <div className="py-3 flex justify-between gap-4">
                 <span className="text-gray-400 text-sm font-medium">Status:</span>
                 <span className="inline-flex items-center gap-1 bg-green-100 text-green-800 text-xs px-2.5 py-0.5 rounded-full font-bold">
-                  {completedOrderDetails.isWhatsApp ? "WhatsApp Sent" : "Processing"}
+                  {completedOrderDetails.status}
                 </span>
-              </div>
+              </div> */}
             </div>
 
-            {completedOrderDetails.isWhatsApp && (
-              <a
-                href={`https://api.whatsapp.com/send?phone=9120537551&text=${encodeURIComponent(
-                  `🌾 *RE-DISPATCH ORDER ${completedOrderDetails.orderId}* 🌾\n\nI was redirecting to WhatsApp. Sourcing name: ${completedOrderDetails.name}. Total amount: ₹${completedOrderDetails.total}.`
-                )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 mb-4"
-              >
-                <MessageSquare className="h-5 w-5 fill-current" />
-                Didn't redirect? Open WhatsApp Again
-              </a>
-            )}
-
             <Link
-              href="/products"
+              href="/orders"
               className="inline-flex items-center justify-center gap-2 w-full bg-gradient-to-r from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700 text-white font-semibold py-3.5 px-6 rounded-2xl shadow-md hover:shadow-green-100 transition-all duration-200 hover:-translate-y-0.5"
             >
-              <ShoppingBag className="h-5 w-5" />
-              Continue Shopping
+              <CheckCircle className="h-5 w-5" />
+              View Order Status
             </Link>
           </div>
         </main>
@@ -329,7 +282,7 @@ export default function CartPage() {
                 Your Basket is Empty
               </h2>
               <p className="text-gray-400 text-sm mb-8 leading-relaxed">
-                You haven't added any fresh staples yet! Our organic harvests are grown with care, waiting to grace your healthy table.
+                You haven&apos;t added any fresh staples yet! Our organic harvests are grown with care, waiting to grace your healthy table.
               </p>
               <Link
                 href="/products"
@@ -723,33 +676,22 @@ export default function CartPage() {
                       </p>
                     </div>
 
-                    {/* Checkout Buttons */}
+                    {/* Checkout Button */}
                     <div className="flex flex-col gap-3 mt-4 pt-4 border-t border-gray-100">
-                      
-                      {/* WhatsApp Checkout Button */}
                       <button
-                        onClick={handleWhatsAppCheckout}
-                        className="bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <MessageSquare className="h-5 w-5 fill-current" />
-                        Place &amp; Dispatch via WhatsApp
-                      </button>
-
-                      {/* Direct Simulated Checkout Button */}
-                      <button
-                        onClick={handleDirectCheckout}
+                        onClick={handlePlaceOrder}
                         disabled={isSubmitting}
-                        className="bg-gray-800 hover:bg-gray-900 disabled:bg-gray-400 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
+                        className="bg-gradient-to-r from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700 disabled:from-gray-400 disabled:to-gray-400 text-white font-bold py-3.5 px-6 rounded-2xl shadow-md transition-all duration-200 hover:-translate-y-0.5 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         {isSubmitting ? (
                           <>
                             <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                            Processing Harvest...
+                            Sending Order...
                           </>
                         ) : (
                           <>
                             <ShoppingBag className="h-5 w-5" />
-                            Place Direct Order (COD)
+                            Place Your Order
                           </>
                         )}
                       </button>

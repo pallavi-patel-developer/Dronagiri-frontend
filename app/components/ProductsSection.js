@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Search, Wheat, X } from "lucide-react";
 import ProductCard from "./ProductCard";
 import { products, categories, categoryToSlug } from "../data/products";
+import Reveal from "./Reveal";
 
 export default function ProductsSection() {
   const [activeCategory, setActiveCategory] = useState("All");
@@ -31,18 +32,25 @@ export default function ProductsSection() {
     <section id="products" className="py-20 px-4 bg-[#fdfbf7]">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
+          <Reveal>
           <span className="inline-block text-xs font-bold tracking-widest text-green-600 uppercase bg-green-100 px-4 py-1.5 rounded-full mb-4">
             Our Products
           </span>
+          </Reveal>
+          <Reveal>
           <h2 className="font-[family-name:var(--font-playfair)] text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Farm-Fresh Goodness
           </h2>
+          </Reveal>
+          <Reveal>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
             Every product is grown and sourced directly from our farm â€” no
             middlemen, no compromises.
           </p>
+          </Reveal>
         </div>
-
+        
+         <Reveal>
         <div className="flex items-center max-w-md mx-auto mb-8 bg-white rounded-2xl shadow-md border border-gray-200 overflow-hidden">
           <Search
             className="ml-4 h-5 w-5 shrink-0 text-gray-400"
@@ -66,7 +74,8 @@ export default function ProductsSection() {
             </button>
           )}
         </div>
-
+        </Reveal>
+        <Reveal>
         <div className="flex flex-wrap gap-2 justify-center mb-10">
           {categories.map((cat) => (
             <button
@@ -83,6 +92,7 @@ export default function ProductsSection() {
             </button>
           ))}
         </div>
+        </Reveal>
 
         {search && (
           <p className="text-center text-sm text-gray-500 mb-6">
@@ -96,11 +106,13 @@ export default function ProductsSection() {
 
         {filtered.length > 0 ? (
           <>
+          <Reveal>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {visibleProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
             </div>
+          </Reveal>
             {showViewMore && (
               <div className="text-center mt-10">
                 <Link

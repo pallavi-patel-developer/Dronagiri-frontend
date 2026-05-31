@@ -6,19 +6,35 @@ const CartContext = createContext();
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
+  const [orders, setOrders] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Load cart from localStorage on mount
+  // Load cart and order history from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem("dronagiri_cart");
-    if (savedCart) {
-      try {
-        setCart(JSON.parse(savedCart));
-      } catch (e) {
-        console.error("Error parsing cart data", e);
+    const loadStoredData = () => {
+      const savedCart = localStorage.getItem("dronagiri_cart");
+      if (savedCart) {
+        try {
+          setCart(JSON.parse(savedCart));
+        } catch (e) {
+          console.error("Error parsing cart data", e);
+        }
       }
-    }
-    setIsLoaded(true);
+
+      const savedOrders = localStorage.getItem("dronagiri_orders");
+      if (savedOrders) {
+        try {
+          setOrders(JSON.parse(savedOrders));
+        } catch (e) {
+          console.error("Error parsing order data", e);
+        }
+      }
+
+      setIsLoaded(true);
+    };
+
+    const timeoutId = window.setTimeout(loadStoredData, 0);
+    return () => window.clearTimeout(timeoutId);
   }, []);
 
   // Save cart to localStorage whenever it changes
@@ -27,6 +43,13 @@ export function CartProvider({ children }) {
       localStorage.setItem("dronagiri_cart", JSON.stringify(cart));
     }
   }, [cart, isLoaded]);
+
+  // Save order history whenever it changes
+  useEffect(() => {
+    if (isLoaded) {
+      localStorage.setItem("dronagiri_orders", JSON.stringify(orders));
+    }
+  }, [orders, isLoaded]);
 
   const addToCart = (product, variantSize, quantity = 1) => {
     const variant = product.variants.find((v) => v.size === variantSize) || product.variants[0];
@@ -77,6 +100,20 @@ export function CartProvider({ children }) {
     setCart([]);
   };
 
+  const addOrder = (order) => {
+    setOrders((prevOrders) => [
+      {
+        ...order,
+        createdAt: order.createdAt || new Date().toISOString(),
+      },
+      ...prevOrders,
+    ]);
+  };
+
+  const clearOrders = () => {
+    setOrders([]);
+  };
+
   const getCartTotal = () => {
     return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
@@ -89,11 +126,14 @@ export function CartProvider({ children }) {
     <CartContext.Provider
       value={{
         cart,
+        orders,
         isLoaded,
         addToCart,
         removeFromCart,
         updateQuantity,
         clearCart,
+        addOrder,
+        clearOrders,
         getCartTotal,
         getCartCount,
       }}

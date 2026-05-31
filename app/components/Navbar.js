@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ShoppingCart } from "lucide-react";
+import { PackageCheck, ShoppingCart } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 
 export default function Navbar() {
@@ -11,6 +11,12 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const { getCartCount } = useCart();
   const cartCount = getCartCount();
+  const navItems = [
+    { label: "Products", href: "/products" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
+    { label: "My Orders", href: "/orders" },
+  ];
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 60);
@@ -61,15 +67,15 @@ export default function Navbar() {
               Home
               <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-500 transition-all duration-300 group-hover:w-full rounded-full" />
             </Link>
-            {["Products", "About", "Contact"].map((item) => (
+            {navItems.map((item) => (
               <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
+                key={item.href}
+                href={item.href}
                 className={`font-medium text-sm tracking-wide transition-all duration-300 hover:text-amber-500 relative group ${
                   scrolled ? "text-gray-700" : "text-white/90"
                 }`}
               >
-                {item}
+                {item.label}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-amber-500 transition-all duration-300 group-hover:w-full rounded-full" />
               </Link>
             ))}
@@ -101,6 +107,16 @@ export default function Navbar() {
           {/* Mobile Right Controls (Cart & Hamburger) */}
           <div className="flex items-center gap-3 md:hidden">
             {/* Mobile Cart Button */}
+            <Link
+              href="/orders"
+              className={`p-2 rounded-xl relative transition-colors ${
+                scrolled ? "text-gray-700" : "text-white"
+              }`}
+              aria-label="My Orders"
+            >
+              <PackageCheck className="h-5.5 w-5.5" />
+            </Link>
+
             <Link
               href="/cart"
               className={`p-2 rounded-xl relative transition-colors ${
@@ -153,14 +169,14 @@ export default function Navbar() {
           }`}
         >
           <div className="bg-white/95 backdrop-blur-md rounded-2xl p-4 shadow-xl flex flex-col gap-2">
-            {["Home", "Products", "About", "Contact"].map((item) => (
+            {[{ label: "Home", href: "/" }, ...navItems].map((item) => (
               <Link
-                key={item}
-                href={`/${item.toLowerCase()}`}
+                key={item.href}
+                href={item.href}
                 onClick={() => setMenuOpen(false)}
                 className="text-gray-700 font-medium px-4 py-2.5 rounded-xl hover:bg-green-50 hover:text-green-700 transition-colors"
               >
-                {item}
+                {item.label}
               </Link>
             ))}
             
