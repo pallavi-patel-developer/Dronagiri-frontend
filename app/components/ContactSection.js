@@ -1,6 +1,7 @@
 "use client";
 
 import { Gift, MapPin, MessageCircle, Phone } from "lucide-react";
+import Reveal from "./Reveal";
 
 export default function ContactSection() {
   return (
@@ -10,19 +11,26 @@ export default function ContactSection() {
     >
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
+          <Reveal>
           <span className="inline-block text-xs font-bold tracking-widest text-amber-600 uppercase bg-amber-100 px-4 py-1.5 rounded-full mb-4">
-            Order & Enquiries
+             Enquiries
           </span>
+          </Reveal>
+          <Reveal>
           <h2 className="font-[family-name:var(--font-playfair)] text-4xl sm:text-5xl font-bold text-gray-900 mb-4">
             Get in Touch
           </h2>
+          </Reveal>
+          <Reveal>
           <p className="text-gray-500 text-lg">
-            Want to order? Have a question? We&apos;re just a message away.
+            Have a question? We&apos;re just a message away.
           </p>
+          </Reveal>
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
           {/* Contact Info */}
+          <Reveal>
           <div className="space-y-5">
             {/* WhatsApp */}
             <a
@@ -94,8 +102,10 @@ export default function ContactSection() {
               </div>
             </div>
           </div>
+          </Reveal>
 
           {/* Quick Order Form */}
+          <Reveal>
           <div className="bg-white rounded-3xl p-6 shadow-md border border-gray-100">
             <h3 className="font-[family-name:var(--font-playfair)] text-xl font-bold text-gray-900 mb-5">
               Quick Order Enquiry
@@ -173,6 +183,7 @@ export default function ContactSection() {
               </button>
             </form>
           </div>
+          </Reveal>
         </div>
       </div>
     </section>
