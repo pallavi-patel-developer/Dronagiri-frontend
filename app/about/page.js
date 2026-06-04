@@ -1,54 +1,60 @@
-import Link from "next/link";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import AboutHero from "../components/AboutHero";
-import ProductCard from "../components/ProductCard";
-import {
-  products,
-  productCategories,
-  categoryToSlug,
-} from "../data/products";
-import MarqueeStrip from "../components/MarqueeStrip";
+import AboutHeroSection from "../components/about/AboutHeroSection";
+import OurStorySection from "../components/about/OurStorySection";
+import FarmToHomeSection from "../components/about/FarmToHomeSection";
+import WhyChooseUsSection from "../components/about/WhyChooseUsSection";
+import ImpactStatsSection from "../components/about/ImpactStatsSection";
+import FarmersSection from "../components/about/FarmersSection";
+import TestimonialsSection from "../components/about/TestimonialsSection";
+import MissionVisionSection from "../components/about/MissionVisionSection";
+import FinalCTASection from "../components/about/FinalCTASection";
 
 export const metadata = {
-  title: "All Products | Dronagiri Farm",
-  description: "Browse all farm-fresh products from Dronagiri Farm.",
+  title: "About Us | Dronagiri Farm — Pure Organic Goodness From Farm To Family",
+  description:
+    "Learn the story behind Dronagiri Farm — our mission, our farmers, and our unwavering commitment to bringing 100% certified organic food directly from our fields to your family's table.",
+  keywords:
+    "about dronagiri farm, organic farm india, farm to table, organic farmers maharashtra, pure organic food, desi ghee, natural spices",
+  openGraph: {
+    title: "About Us | Dronagiri Farm",
+    description:
+      "Meet the farmers, discover our story, and learn how we bring pure organic goodness from farm to your family.",
+    type: "website",
+  },
 };
 
 export default function AboutPage() {
   return (
     <>
       <Navbar />
-      <AboutHero
-        title="All Farm-Fresh Products"
-        description="Browse every product grown and sourced directly from our farm."
-      />
-      <MarqueeStrip />
-      <main className="flex-1 bg-[#fdfbf7] py-20 px-4">
-        <div className="max-w-7xl mx-auto">
+      <main className="flex-1">
+        {/* 1. Hero Section */}
+        <AboutHeroSection />
 
-          {/* <div className="flex flex-wrap gap-2 justify-center mb-10">
-            {productCategories.map((category) => (
-              <Link
-                key={category}
-                href={`/products/${categoryToSlug(category)}`}
-                className="border-2 border-gray-200 text-gray-600 hover:border-green-400 hover:text-green-600 bg-white px-4 py-2 rounded-full text-sm font-semibold transition-all duration-200"
-              >
-                {category}
-              </Link>
-            ))}
-          </div> */}
+        {/* 2. Our Story */}
+        <OurStorySection />
 
-          {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                orderHref="/#contact"
-              />
-            ))}
-          </div> */}
-        </div>
+        {/* 3. Farm To Home Journey */}
+        <FarmToHomeSection />
+
+        {/* 4. Why Choose Us */}
+        <WhyChooseUsSection />
+
+        {/* 5. Impact Statistics */}
+        <ImpactStatsSection />
+
+        {/* 6. Meet Our Farmers */}
+        <FarmersSection />
+
+        {/* 7. Customer Testimonials */}
+        <TestimonialsSection />
+
+        {/* 8. Mission & Vision */}
+        <MissionVisionSection />
+
+        {/* 9. Final CTA Banner */}
+        <FinalCTASection />
       </main>
       <Footer />
     </>

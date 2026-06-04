@@ -141,6 +141,112 @@ html {
   100% { transform: translateX(-50%); }
 }
 
+/* About page - scroll reveal */
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+    filter: blur(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* About page typography */
+.about-section-label {
+  display: inline-block;
+  color: #8C6A43;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  border-bottom: 2px solid rgba(140, 106, 67, 0.4);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+/* About hero text glow */
+.about-hero-text {
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Farm timeline connector animation */
+@keyframes dash {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Farmer card image zoom */
+.farmer-img-wrap {
+  overflow: hidden;
+  border-radius: 1.5rem;
+}
+
+.farmer-img-wrap img {
+  transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.farmer-img-wrap:hover img {
+  transform: scale(1.08);
+}
+
+/* Premium card shine effect */
+@keyframes cardShine {
+  0% { transform: translateX(-100%) rotate(45deg); }
+  100% { transform: translateX(200%) rotate(45deg); }
+}
+
+.premium-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 30%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(255, 255, 255, 0.08),
+    transparent
+  );
+  transform: rotate(45deg);
+  transition: none;
+}
+
+.premium-card:hover::after {
+  animation: cardShine 0.7s ease-in-out;
+}
+
+/* Counter number style */
+.impact-counter {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Testimonial quote animation */
+@keyframes quotePulse {
+  0%, 100% { opacity: 0.08; transform: scale(1); }
+  50% { opacity: 0.12; transform: scale(1.05); }
+}
+
+.quote-bg {
+  animation: quotePulse 4s ease-in-out infinite;
+}
+
 .marquee-track {
   animation: marquee 20s linear infinite;
 }
