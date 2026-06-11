@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Star, Minus, Plus } from "lucide-react";
+import { motion, useAnimation } from "framer-motion";
 import { categoryColors } from "../data/products";
 import ProductIcon from "./ProductIcon";
 import { useCart } from "@/context/CartContext";
@@ -11,7 +12,20 @@ export default function ProductCard({ product }) {
   const [selectedVariant, setSelectedVariant] = useState(0);
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCart();
-  
+  const controls = useAnimation();
+
+  const handleAddToCartAnimation = async () => {
+    await controls.start({
+      x: 300,
+      y: -200,
+      scale: 0.2,
+      opacity: 0,
+      transition: { duration: 0.6, ease: "easeInOut" },
+    });
+
+    controls.set({ x: 0, y: 0, scale: 1, opacity: 1 });
+  };
+
   const variant = product.variants[selectedVariant];
   const catColor =
     categoryColors[product.category] || "bg-gray-100 text-gray-700";
@@ -32,7 +46,8 @@ export default function ProductCard({ product }) {
           </span>
         )}
         <div className="text-green-700 select-none" aria-hidden="true">
-          <ProductIcon product={product} className="h-16 w-16" />
+          <ProductIcon
+          product={product} className="h-16 w-16" />
         </div>
         <span
           className={`absolute bottom-4 left-4 text-xs font-semibold px-3 py-1 rounded-full ${catColor}`}
@@ -111,8 +126,9 @@ export default function ProductCard({ product }) {
             </div>
           </div>
 
-          <button
-            onClick={() => {
+          <motion.button
+            // animate={controls}
+            onClick={async () => {
               addToCart(product, variant.size, quantity);
               toast.success("Added to Cart!", {
                 description: `${quantity} x ${product.name} (${variant.size}) successfully added.`,
@@ -122,11 +138,12 @@ export default function ProductCard({ product }) {
                 },
               });
               setQuantity(1);
+              // await handleAddToCartAnimation();
             }}
             className="w-full bg-gradient-to-r from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700 text-white text-sm font-semibold py-2.5 px-4 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 hover:-translate-y-0.5 text-center cursor-pointer"
           >
             Add to Cart
-          </button>
+          </motion.button>
         </div>
       </div>
     </div>

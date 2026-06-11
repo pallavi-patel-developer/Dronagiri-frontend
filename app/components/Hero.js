@@ -220,21 +220,21 @@ export default function Hero() {
       </div>
 
       {/* Slide Navigation Buttons */}
-      <button
+      {/* <button
         onClick={prevSlide}
         className="absolute left-3 sm:left-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3.5 rounded-full bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 hover:border-white/25 text-white/70 hover:text-white transition-all duration-300 hover:scale-110 active:scale-95 group flex items-center justify-center cursor-pointer shadow-lg"
         aria-label="Previous slide"
       >
         <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 transition-transform duration-300 group-hover:-translate-x-0.5" />
-      </button>
+      </button> */}
 
-      <button
+      {/* <button
         onClick={nextSlide}
         className="absolute right-3 sm:right-6 top-1/2 -translate-y-1/2 z-30 p-2.5 sm:p-3.5 rounded-full bg-white/5 hover:bg-white/15 backdrop-blur-md border border-white/10 hover:border-white/25 text-white/70 hover:text-white transition-all duration-300 hover:scale-110 active:scale-95 group flex items-center justify-center cursor-pointer shadow-lg"
         aria-label="Next slide"
       >
         <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 transition-transform duration-300 group-hover:translate-x-0.5" />
-      </button>
+      </button> */}
 
       {/* Slide Indicators */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2.5">

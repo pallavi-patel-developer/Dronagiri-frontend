@@ -100,6 +100,12 @@ export default function Navbar() {
               href="/products"
               className="bg-gradient-to-r from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-md hover:shadow-green-300 transition-all duration-300 hover:-translate-y-0.5"
             >
+              Log in
+            </Link>
+            <Link
+              href="/products"
+              className="bg-gradient-to-r from-green-600 to-lime-600 hover:from-green-700 hover:to-lime-700 text-white px-5 py-2 rounded-full text-sm font-semibold shadow-md hover:shadow-green-300 transition-all duration-300 hover:-translate-y-0.5"
+            >
               Shop Now
             </Link>
           </div>
